@@ -11,13 +11,8 @@ jobs:
   sync-ref-mirror: # 自定义名称
     runs-on: ubuntu-latest
     steps:
-      - name: 设置node版本
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
       - name: 🚜 拉取最新代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: 'main'
           repository: 'jaywcjlove/reference'
