@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚜 拉取最新代码
-        uses: actions/checkout@v3
+        uses: 
+          - actions/checkout@v3
+          - actions/setup-node@v3
         with:
           ref: 'main'
           repository: 'jaywcjlove/reference'
-
-      - name: ♻️ 编译静态文件
-        uses: actions/setup-node@v3
-        with:
           node-version: 20
+
+      - name: ♻️ 编译静态文件          
         run: |
           echo -e 'REF_URL=http://ref.tinyplan.cn/\nREF_LABEL=网站首页' > .env
           npm install
