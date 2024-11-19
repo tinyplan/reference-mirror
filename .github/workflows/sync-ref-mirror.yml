@@ -1,0 +1,35 @@
+name: 每天1点同步一次reference
+on:
+  schedule:
+    - cron: '0 1 * * *' # 定时任务
+  workflow_dispatch:       # 手动运行
+
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  sync-ref-mirror: # 自定义名称
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚜 拉取最新代码
+        uses: actions/checkout@v3
+        with:
+          ref: 'main'
+          repository: 'jaywcjlove/reference'
+
+      - name: ♻️ 编译静态文件
+        run: |
+          echo -e 'REF_URL=http://ref.tinyplan.cn/\nREF_LABEL=网站首页' > .env
+          npm install
+          npm run build
+
+      - name: 🚁 部署到服务器
+        uses: wlixcc/SFTP-Deploy-Action@v1.0
+        with:
+          username: ${{ secrets.DEPLOY_USER }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          server: ${{ secrets.DEPLOY_HOST }}
+          ssh_private_key: ${{ secrets.DEPLOY_SECRET_KEY }}
+          local_path: './dist/*'
+          remote_path: '/data/static/reference'
+          delete_remote_files: true
